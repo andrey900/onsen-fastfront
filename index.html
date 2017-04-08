@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="/lib/onsenui/css/onsenui.css"/>
+    <link rel="stylesheet" href="/lib/onsenui/css/onsen-css-components.min.css"/>
+    <link rel="stylesheet" href="/lib/app/css/style.css"/>
+    <script src="/lib/angular/angular.min.js"></script>
+    <script src="/lib/onsenui/js/onsenui.min.js"></script>
+    <script src="/lib/onsenui/js/angular-onsenui.min.js"></script>
+    <script src="/lib/app/js/libs.js"></script>
+    <script>
+      ons.bootstrap()
+      .controller('UsersController', function() {
+        this.loading = true;
+        this.users = [
+          new User('Andrey'),
+          new User('Leonardo'),
+          new User('Adrian'),
+          new User('Devil'),
+          new User('Edmond')
+        ];
+        console.log(this.loading);
+        this.loading = false;
+        setTimeout(function(){ this.loading = false; }.bind(this), 600);
+        setTimeout(function(){ console.log(this.loading); }.bind(this), 1000);
+      })
+      .controller('SplitterController', function() {
+        this.pages = [
+          {title: 'Home', url: 'home.html'},
+          {title: 'Users', url: 'pages/users.html'},
+          {title: 'Settings', url: 'settings.html'},
+          {title: 'About', url: 'about.html'}
+        ];
+        this.load = function(page) {
+          pageLoader.content.load(page)
+            .then(function() {
+              pageLoader.left.close();
+            });
+        };
+      });
+    </script>
+  </head>
+  <body>
+<ons-splitter var="pageLoader" ng-controller="SplitterController as splitter">
+  <ons-splitter-side side="left" width="220px" collapse swipeable>
+    <ons-page>
+      <ons-list ng-repeat="page in splitter.pages">
+        <ons-list-item ng-click="splitter.load(page.url)" tappable>
+          {{page.title}}
+        </ons-list-item>
+      </ons-list>
+    </ons-page>
+  </ons-splitter-side>
+  <ons-splitter-content page="home.html"></ons-splitter-content>
+</ons-splitter>
+
+<ons-template id="home.html">
+  <ons-page>
+    <ons-toolbar>
+      <div class="left">
+        <ons-toolbar-button ng-click="pageLoader.left.open()">
+          <ons-icon icon="md-menu"></ons-icon>
+        </ons-toolbar-button>
+      </div>
+      <div class="center">
+        Main
+      </div>
+    </ons-toolbar>
+    <p style="text-align: center; opacity: 0.6; padding-top: 20px;">
+      Swipe right to open the menu!
+    </p>
+  </ons-page>
+</ons-template>
+
+<ons-template id="settings.html">
+  <ons-page>
+    <ons-toolbar>
+      <div class="left">
+        <ons-toolbar-button ng-click="pageLoader.left.open()">
+          <ons-icon icon="md-menu"></ons-icon>
+        </ons-toolbar-button>
+      </div>
+      <div class="center">
+        Settings
+      </div>
+    </ons-toolbar>
+    <p style="text-align: center; opacity: 0.6; padding-top: 20px;">
+      Swipe right to open the menu!
+    </p>
+  </ons-page>
+</ons-template>
+
+<ons-template id="about.html">
+  <ons-page>
+    <ons-toolbar>
+      <div class="left">
+        <ons-toolbar-button ng-click="pageLoader.left.open()">
+          <ons-icon icon="md-menu"></ons-icon>
+        </ons-toolbar-button>
+      </div>
+      <div class="center">
+        About
+      </div>
+    </ons-toolbar>
+    <p style="text-align: center; opacity: 0.6; padding-top: 20px;">
+      Swipe right to open the menu!
+    </p>
+  </ons-page>
+</ons-template>
+  </body>
+</html>

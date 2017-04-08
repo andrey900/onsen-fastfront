@@ -1,0 +1,25 @@
+<ons-page ng-controller="UsersController as cuser">
+  <ons-toolbar>
+    <div class="left">
+      <ons-toolbar-button ng-click="pageLoader.left.open()">
+        <ons-icon icon="md-menu"></ons-icon>
+      </ons-toolbar-button>
+    </div>
+    <div class="center">
+      Users
+    </div>
+  </ons-toolbar>
+  
+  <div class="loader-block" ng-show="cuser.loading">
+    <svg class="progress-circular progress-circular--indeterminate">
+      <circle class="progress-circular__primary progress-circular--indeterminate__primary"/>
+    </svg>
+    <p class="loader-text">
+      Please wait, content loading...
+    </p>
+  </div>
+
+  <ul ng-repeat="user in cuser.users">
+    <li>{{user.name}}</li>
+  </ul>
+</ons-page>
