@@ -10,7 +10,7 @@
     </div>
   </ons-toolbar>
   
-  <div class="loader-block" ng-show="cuser.loading">
+  <div class="loader-block" ng-show="loading">
     <svg class="progress-circular progress-circular--indeterminate">
       <circle class="progress-circular__primary progress-circular--indeterminate__primary"/>
     </svg>
@@ -19,7 +19,16 @@
     </p>
   </div>
 
-  <ul ng-repeat="user in cuser.users">
-    <li>{{user.name}}</li>
-  </ul>
+  <ons-list ng-repeat="user in users">
+    <ons-list-item modifier="chevron" tappable>
+      <div class="center">
+        <span class="list-item__title">{{user.name | capitalize}} {{user.last | capitalize}}</span>
+        <span class="list-item__subtitle">in: {{user.company}}</span>
+      </div>
+    </ons-list-item>
+  </ons-list>
+
+  <ons-fab ripple position="bottom right" ng-click="myNavigator.pushPage('/pages/actions/useradd.html')">
+    <ons-icon icon="md-plus"></ons-icon>
+  </ons-fab>
 </ons-page>

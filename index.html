@@ -11,49 +11,93 @@
     <script src="/lib/app/js/libs.js"></script>
     <script>
       ons.bootstrap()
-      .controller('UsersController', function() {
-        this.loading = true;
-        this.users = [
-          new User('Andrey'),
-          new User('Leonardo'),
-          new User('Adrian'),
-          new User('Devil'),
-          new User('Edmond')
-        ];
-        console.log(this.loading);
-        this.loading = false;
-        setTimeout(function(){ this.loading = false; }.bind(this), 600);
-        setTimeout(function(){ console.log(this.loading); }.bind(this), 1000);
+      .filter('capitalize', function() {
+          return function(input) {
+            return (!!input) ? input.charAt(0).toUpperCase() + input.substr(1).toLowerCase() : '';
+          }
       })
-      .controller('SplitterController', function() {
-        this.pages = [
+      .service('usersService', function() {
+        var usersList = [];
+
+        var addUser = function(newObj) {
+          if( newObj instanceof User )
+            usersList.push(newObj);
+          else
+            usersList.push(new User(newObj));
+        };
+
+        var getUsers = function(){
+            return usersList;
+        };
+
+        var flush = function(){
+          usersList = [];
+        }
+
+        return {
+          addUser: addUser,
+          flush: flush,
+          getUsers: getUsers
+        };
+
+      })
+      .controller('UsersController', function($scope, $http, usersService){
+        $scope.loading = true;
+        usersService.flush();
+        $scope.users = usersService.getUsers();
+        $http.get("/api/users.json")
+        .then(function(response) {
+            $scope.loading = false;
+            angular.forEach(response.data, usersService.addUser);
+        }, errorMessage);
+      })
+      .controller('UsersAddController', function($scope, $http, usersService){
+        $scope.user = new User({});
+        $scope.doCreate = function(){
+          if( $scope.user.name && $scope.user.last ){
+            usersService.addUser($scope.user);
+          }
+          $scope.myNavigator.popPage();
+        }
+      })
+      .controller('SplitterController', function($scope) {
+        $scope.page = 'home.html';
+        $scope.pages = [
           {title: 'Home', url: 'home.html'},
-          {title: 'Users', url: 'pages/users.html'},
+          {title: 'Users', url: '/pages/users.html'},
           {title: 'Settings', url: 'settings.html'},
           {title: 'About', url: 'about.html'}
         ];
-        this.load = function(page) {
-          pageLoader.content.load(page)
-            .then(function() {
+        $scope.load = function(page) {
+          $scope.myNavigator.resetToPage(page).then(function(){
               pageLoader.left.close();
-            });
+          });
+            
         };
       });
     </script>
   </head>
   <body>
-<ons-splitter var="pageLoader" ng-controller="SplitterController as splitter">
-  <ons-splitter-side side="left" width="220px" collapse swipeable>
-    <ons-page>
-      <ons-list ng-repeat="page in splitter.pages">
-        <ons-list-item ng-click="splitter.load(page.url)" tappable>
-          {{page.title}}
-        </ons-list-item>
-      </ons-list>
-    </ons-page>
-  </ons-splitter-side>
-  <ons-splitter-content page="home.html"></ons-splitter-content>
-</ons-splitter>
+<ons-page>
+    <ons-splitter var="pageLoader" ng-controller="SplitterController">
+      <ons-splitter-side side="left" width="220px" collapse swipeable>
+        <ons-page>
+          <ons-list ng-repeat="page in pages">
+            <ons-list-item ng-click="load(page.url)" tappable>
+              {{page.title}}
+            </ons-list-item>
+          </ons-list>
+        </ons-page>
+      </ons-splitter-side>
+      <ons-splitter-content page="main.html"></ons-splitter-content>
+    </ons-splitter>
+</ons-page>
+
+<ons-template id="main.html">
+  <ons-page id="main">
+    <ons-navigator var="myNavigator" page='home.html'></ons-navigator>
+  </ons-page>
+</ons-template>
 
 <ons-template id="home.html">
   <ons-page>

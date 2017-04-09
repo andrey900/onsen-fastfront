@@ -1,0 +1,34 @@
+<ons-page ng-controller="UsersAddController">
+  <ons-toolbar>
+    <div class="left"><ons-back-button>Back</ons-back-button></div>
+    <div class="center">
+      Create new user
+    </div>
+    <div class="right">
+      <ons-toolbar-button ng-click="pageLoader.left.open()">
+        <ons-icon icon="md-menu"></ons-icon>
+      </ons-toolbar-button>
+    </div>
+  </ons-toolbar>
+  
+  <div style="text-align: center; margin-top: 30px;">
+    <p>
+      <ons-input id="firstname" modifier="underbar" placeholder="First name" float ng-model="user.name"></ons-input>
+    </p>
+    <p>
+      <ons-input id="lastname" modifier="underbar" type="text" placeholder="Last name" float ng-model="user.last"></ons-input>
+    </p>
+    <p>
+      <ons-input id="company" modifier="underbar" type="text" placeholder="Company name" float ng-model="user.company"></ons-input>
+    </p>
+    <p>
+      <ons-input id="phone" modifier="underbar" type="text" placeholder="Phone" float ng-model="user.phone"></ons-input>
+    </p>
+    <p>
+      <ons-input id="email" modifier="underbar" type="text" placeholder="Email" float ng-model="user.email"></ons-input>
+    </p>
+    <p style="margin-top: 30px;">
+      <ons-button ng-click="doCreate()">Create</ons-button>
+    </p>
+  </div>
+</ons-page>
